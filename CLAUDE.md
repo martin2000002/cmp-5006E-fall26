@@ -38,26 +38,26 @@ y hacen checkout de esa rama.
 - **Todos los tests provistos pasando** (`python3 test_<algo>.py`). Algunos tests
   esperan que una garantía *falle* — eso es intencional, no es un bug.
 - **`WRITEUP.md`** en la carpeta del studio: responde las preguntas de cada task y
-  contiene el Control Scorecard.
-- **Evidencia reproducible** (`evidence.py` + `results/`) cuando el scorecard pide
-  números. La rúbrica exige ≥20 payloads, un bypass intentado y el coste de falsos
-  positivos medido — asertos sin evidencia puntúan 1 sobre 4.
+  contiene el Control Scorecard **en el formato y el tamaño que pida ese README**.
 - Los **bonus del README** (renders, demos) si los pide.
 
 ## El Control Scorecard
 
-Los 8 ejes, con los tres que deciden la nota:
+**El README del studio manda sobre el alcance.** `resources/control-scorecard.md`
+describe la rúbrica completa (8 ejes, evidencia con ≥20 payloads, puntuación 0–4),
+pero cada semana pide una porción distinta. Si el README dice *"fill one scorecard
+row for each construction (5 min)"*, es **una fila por construcción en una sola
+tabla** — no una tabla de 8 ejes por construcción. Leer la instrucción literal y el
+presupuesto de tiempo antes de escribir nada.
+
+Lo que sí es constante todas las semanas:
 
 - **Eje 2 · Garantía** — siempre como *condicional*. "AES es seguro" vale la mitad
   que "AES-CTR da confidencialidad **siempre que el par (clave, nonce) no se repita**".
-- **Eje 4 · Bypass** — no intentarlo es 0 en el eje. Un bypass que funciona y un
-  intento serio documentado valen lo mismo: crédito completo.
-- **Eje 5 · Coste de falsos positivos** — un control que nadie puede tolerar no está
-  desplegado. Hay que medirlo contra tráfico benigno.
-
-Todo reporte cierra con **"Where we may have been unfair, and what we did not test"**.
-Vale nota real: encontrar un defecto genuino en la propia evaluación puntúa más alto
-que concluir "estamos seguros". Se califica la evaluación, no el veredicto.
+- **Clasificar el fallo**: ¿rotura del primitivo o *misuse* de la construcción?
+- Cerrar con **"Where we may have been unfair, and what we did not test"**. Vale nota
+  real: encontrar un defecto genuino en la propia evaluación puntúa más alto que
+  concluir "estamos seguros". Se califica la evaluación, no el veredicto.
 
 ## Convenciones
 
@@ -65,8 +65,9 @@ que concluir "estamos seguros". Se califica la evaluación, no el veredicto.
   comentar cada línea ni de escribir testamentos.
 - **Writeups directos.** Responder lo que se pide, con tablas y números. Sin relleno.
 - Se trabaja en inglés en el código y el writeup (el material del curso lo está).
-- Nada fuera de lo que pide el README del studio: sin presentaciones ni extras que
-  nadie pidió. Las demos se presentan hablando.
+- **Nada fuera de lo que pide el README del studio.** Sin presentaciones, sin scripts
+  de evidencia y sin secciones que nadie pidió. Si el README pide una fila, es una
+  fila. Las demos se presentan hablando.
 - `seclab` y Docker solo aparecen en las semanas que lo indiquen; las semanas de
   cripto son Python puro con stdlib.
 
