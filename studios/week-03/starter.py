@@ -22,8 +22,7 @@ def ecb_leak_count(image: bytes, key: bytes) -> int:
 
     Hint: ``ecb_encrypt(image, key)`` then ``distinct_blocks(...)``.
     """
-    # TODO: ECB-encrypt the image and count distinct ciphertext blocks.
-    raise NotImplementedError
+    return distinct_blocks(ecb_encrypt(image, key))
 
 
 # ---- Task 2: CTR nonce reuse == week-2 two-time pad -------------------------
@@ -38,8 +37,8 @@ def recover_second_plaintext(c1: bytes, c2: bytes, known_m1: bytes) -> bytes:
 
     Use ``xor(...)`` from ``modes``. Return bytes of length ``len(known_m1)``.
     """
-    # TODO: cancel the shared keystream and solve for m2.
-    raise NotImplementedError
+    n = len(known_m1)
+    return xor(xor(c1[:n], c2[:n]), known_m1)
 
 
 # ---- Task 3: forge a H(secret‖msg) MAC by length extension ------------------
@@ -61,9 +60,10 @@ def forge_extension(observed_msg: bytes, observed_tag: int, secret_len: int,
       3. forged_msg = observed_msg + pad + extension
       4. forged_tag = md_hash(extension, iv=observed_tag)   # resume from the tag
     """
-    # TODO: build forged_msg with the glue padding, then resume md_hash from
-    #       observed_tag to produce forged_tag.
-    raise NotImplementedError
+    pad = bytes((-(secret_len + len(observed_msg))) % 4)
+    forged_msg = observed_msg + pad + extension
+    # The tag IS the internal state, so it works as the IV to keep hashing from.
+    return forged_msg, md_hash(extension, iv=observed_tag)
 
 
 if __name__ == "__main__":
