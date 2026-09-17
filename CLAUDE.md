@@ -64,12 +64,11 @@ Lo que sí es constante todas las semanas:
 Al terminar el studio, dar **la división de las tasks entre 3 personas**. Solo la
 división: sin guion de presentación, sin repartir diapositivas, sin roles inventados.
 
-- **Una task por persona**, sin solapamiento. Cada uno tiene que poder explicar la
-  suya sin depender de lo que hizo otro.
-- Si hay una task de scorecard, **no es de nadie**: cada fila va con la persona que
-  produjo su evidencia.
-- Si una task queda claramente más liviana, decirlo en vez de inflarla.
-- Formato: una tabla `Persona | Task | Qué cubre`.
+- **Cada persona presenta un bloque entero y nadie se mete en el del otro.** Sin
+  handoffs, sin que uno ponga la evidencia de la task del otro.
+- Si hay 4 tasks para 3 personas, **las dos más livianas van juntas a una persona**
+  (típicamente la primera y la del scorecard). No partir una task entre dos.
+- Formato: una tabla `Persona | Presenta`. Nada más.
 
 ## Convenciones
 
