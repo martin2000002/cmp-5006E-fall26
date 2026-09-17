@@ -59,6 +59,18 @@ Lo que sí es constante todas las semanas:
   real: encontrar un defecto genuino en la propia evaluación puntúa más alto que
   concluir "estamos seguros". Se califica la evaluación, no el veredicto.
 
+## División entre 3 personas
+
+Al terminar el studio, dar **la división de las tasks entre 3 personas**. Solo la
+división: sin guion de presentación, sin repartir diapositivas, sin roles inventados.
+
+- **Una task por persona**, sin solapamiento. Cada uno tiene que poder explicar la
+  suya sin depender de lo que hizo otro.
+- Si hay una task de scorecard, **no es de nadie**: cada fila va con la persona que
+  produjo su evidencia.
+- Si una task queda claramente más liviana, decirlo en vez de inflarla.
+- Formato: una tabla `Persona | Task | Qué cubre`.
+
 ## Convenciones
 
 - **Comentarios mínimos.** Solo para lo que no se entiende leyendo el código. Nada de
