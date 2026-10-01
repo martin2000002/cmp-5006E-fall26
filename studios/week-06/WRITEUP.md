@@ -6,13 +6,14 @@ Code: [`starter.py`](starter.py) (Tasks 1 & 2).
 PYTHONPATH="$(git rev-parse --show-toplevel)" python3 studios/week-06/test_studio.py
 ```
 
-> **Status:** all 6 provided tests pass. Upstream's week-6 commit added `labs/`
-> but **not** `projects/duel-2-web/ground_truth.json`, so we supply a local
-> stand-in: the honest, source-derived ground truth
-> `{sqli@do_login, xss@do_reflect, cmdi@do_ping}` (the three commented `# VULN`
-> sinks), in the exact shape `load_ground_truth()` reads. Replace it with the
-> professor's fixture when it lands and re-run — the numbers are unchanged if, as
-> expected, the fixtures agree.
+> **Status:** all 6 provided tests pass against the professor's official ground
+> truth, which confirms our analysis exactly (`sqli@do_login`, `xss@do_reflect`,
+> `cmdi@do_ping`, with `do_reflect_safe` listed as a true negative and
+> `broken-access-control` as *not present*). One path fix was needed: upstream
+> committed it to `studios/week-06/ground_truth.json`, but the GIVEN
+> `webharness.py` reads `projects/duel-2-web/ground_truth.json`, so we copied the
+> official file to that path verbatim. The numbers below are unchanged from our
+> initial source-derived set — the fixtures agree.
 
 ## Recap
 
@@ -128,13 +129,12 @@ application concatenated untrusted input into the control channel.
 
 ## Where we may have been unfair, and what we did not test
 
-- **The ground truth is ours, not the course's.** Upstream had not pushed
-  `projects/duel-2-web/ground_truth.json`, so every duel number above is scored
-  against a local stand-in **we** derived by reading the source. The README's own
-  warning applies to us: "a ground truth that is just whatever a tool found rigs
-  the game." Ours was built from the three commented `# VULN` sinks, not from a
-  tool's output, but it is unverified against the professor's fixture until that
-  file lands — the sixth test is the only thing that would catch a disagreement.
+- **The ground truth matched, but we never stress-tested it.** The professor's
+  official fixture agrees with the set we derived from the source — reassuring, but
+  both were built the same way (reading `vulnweb_app.py`), so the agreement does
+  not independently validate either. The README's own warning still applies: a
+  ground truth is only as honest as the reading behind it, and neither of us tested
+  it against an attack the source does not obviously advertise.
 - **The cmdi sink never runs a shell.** `do_ping` *simulates* execution with a
   regex `re.search(r"[;&|`$()]", host)`. We confirmed that a metacharacter reaches
   the command context — we did **not** demonstrate code execution, and our oracle
