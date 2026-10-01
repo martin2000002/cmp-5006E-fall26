@@ -48,9 +48,14 @@ def confirm_sqli() -> list[Finding]:
 
     Return the list of Findings.
     """
-    # TODO: build the payloads (incl. a benign control) and run_payloads with a
-    #       canary oracle; return the Findings.
-    raise NotImplementedError
+    payloads = [
+        Payload("admin' OR '1'='1", "auth-bypass", "sqli"),
+        Payload("admin'--", "comment-out", "sqli"),
+        Payload("' UNION SELECT user, secret FROM users--", "union-dump", "sqli"),
+        Payload("alice", "real user, wrong password", "benign"),
+    ]
+    return run_payloads(payloads, send=login_send,
+                        oracle=contains_oracle("FLAG-sqli-"))
 
 
 def confirm_xss() -> tuple[Finding, Finding]:
@@ -69,10 +74,17 @@ def confirm_xss() -> tuple[Finding, Finding]:
     reuse ``contains_oracle`` here (the payload IS the marker, so it would confirm
     mere reflection — the exact false positive this task is about).
     """
-    # TODO: define xss_oracle (unescaped <script> present), pick a marker payload
-    #       such as "<script>alert('XSS-FIRED-7f3a')</script>", run it against
-    #       reflect_send and reflect_safe_send, and return (vuln_f, safe_f).
-    raise NotImplementedError
+    marker = "<script>alert('XSS-FIRED-7f3a')</script>"
+
+    def xss_oracle(payload, response):
+        hit = payload.text in response          # unescaped <script> survived
+        return hit, ("unescaped <script> reflected" if hit else
+                     "payload encoded or absent — reflection is not execution")
+
+    p = Payload(marker, "reflected-xss", "xss")
+    vuln_f = run_payloads([p], send=reflect_send, oracle=xss_oracle)[0]
+    safe_f = run_payloads([p], send=reflect_safe_send, oracle=xss_oracle)[0]
+    return vuln_f, safe_f
 
 
 def confirm_cmdi() -> list[Finding]:
@@ -86,9 +98,24 @@ def confirm_cmdi() -> list[Finding]:
     Include a benign control (a plain host with no metacharacters) that must NOT
     confirm. Return the Findings.
     """
-    # TODO: define cmdi_oracle (json injection_detected True), build payloads incl.
-    #       a benign control, run_payloads with ping_send, return the Findings.
-    raise NotImplementedError
+    import json
+
+    def cmdi_oracle(payload, response):
+        try:
+            injected = json.loads(response).get("injection_detected") is True
+        except (json.JSONDecodeError, AttributeError):
+            injected = False
+        return injected, ("shell metacharacter reached the command" if injected
+                          else "no metacharacter reached the command")
+
+    payloads = [
+        Payload("127.0.0.1; whoami", "semicolon-chain", "cmdi"),
+        Payload("127.0.0.1 && whoami", "and-chain", "cmdi"),
+        Payload("127.0.0.1 | whoami", "pipe", "cmdi"),
+        Payload("$(whoami)", "subshell", "cmdi"),
+        Payload("127.0.0.1", "plain host, no metacharacters", "benign"),
+    ]
+    return run_payloads(payloads, send=ping_send, oracle=cmdi_oracle)
 
 
 # ============================================================================
@@ -117,9 +144,24 @@ def parse_llm_review(raw: str) -> list[ScanResult]:
     its Broken-Access-Control claim and its finding on ``do_reflect_safe``. Whether
     those are real is decided by scoring against the ground truth, not by you.
     """
-    # TODO: scan each line for a RULE_ALIASES key and a do_<name> location; emit a
-    #       ScanResult per finding. Return the list.
-    raise NotImplementedError
+    import re
+
+    results = []
+    sev_re = re.compile(r"\[(\w+)\]")
+    loc_re = re.compile(r"do_\w+")
+    for line in raw.splitlines():
+        low = line.lower()
+        rule = next((canon for prose, canon in RULE_ALIASES.items()
+                     if prose in low), None)
+        loc = loc_re.search(line)
+        if rule is None or loc is None:
+            continue
+        sev = sev_re.search(line)
+        results.append(ScanResult(
+            rule=rule, location=loc.group(0), tool="llm",
+            severity=(sev.group(1).lower() if sev else "unknown"),
+            raw=line.strip()))
+    return results
 
 
 # ============================================================================

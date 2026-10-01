@@ -1,0 +1,9 @@
+{
+  "_note": "LOCAL STAND-IN for the week-6 studio. Upstream had not pushed projects/duel-2-web/ when this studio was done; this is the honest, source-derived ground truth for labs/vuln-web (the three commented # VULN sinks). Replace with the professor's fixture when it lands — load_ground_truth() reads only rule + location, so the shape matches.",
+  "target": "labs/vuln-web/app/vulnweb_app.py",
+  "findings": [
+    {"rule": "sqli", "location": "do_login", "severity": "high"},
+    {"rule": "xss", "location": "do_reflect", "severity": "high"},
+    {"rule": "cmdi", "location": "do_ping", "severity": "high"}
+  ]
+}
